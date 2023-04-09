@@ -1,6 +1,7 @@
 #include <iostream>
 #include <windows.h>
 #include <process.h>
+#include "main.h"
 
 using namespace std;
 
@@ -17,7 +18,7 @@ DWORD WINAPI MinMaxThread(LPVOID lpParam) {
     int maxVal = arr[0];
 
     for (int i = 1; i < n; i++) {
-        Sleep(7); // засыпаем на 7 миллисекунд
+        Sleep(7);
 
         if (arr[i] < minVal) {
             minVal = arr[i];
@@ -32,13 +33,13 @@ DWORD WINAPI MinMaxThread(LPVOID lpParam) {
     cout << "Maximum value: " << maxVal << endl;
 
     return 0;
-}
+};
 
 DWORD WINAPI AverageThread(LPVOID lpParam) {
     int sum = 0;
 
     for (int i = 0; i < n; i++) {
-        Sleep(12); // засыпаем на 12 миллисекунд
+        Sleep(12);
 
         sum += arr[i];
     }
@@ -47,23 +48,10 @@ DWORD WINAPI AverageThread(LPVOID lpParam) {
     cout << "Average value: " << average << endl;
 
     return 0;
-}
+};
 
-int main() {
-    cout << "Enter the size of the array: ";
-    cin >> n;
 
-    cout << "Enter " << n << " elements of the array: ";
-    for (int i = 0; i < n; i++) {
-        cin >> arr[i];
-    }
-
-    hMinMax = CreateThread(NULL, 0, MinMaxThread, NULL, 0, NULL);
-    hAverage = CreateThread(NULL, 0, AverageThread, NULL, 0, NULL);
-
-    WaitForSingleObject(hMinMax, INFINITE);
-    WaitForSingleObject(hAverage, INFINITE);
-
+void replaceMinMaxWithAverage() {
     int minIdx = 0;
     int maxIdx = 0;
 
@@ -92,6 +80,24 @@ int main() {
     }
 
     cout << endl;
+}
+
+int main() {
+    cout << "Enter the size of the array: ";
+    cin >> n;
+
+    cout << "Enter " << n << " elements of the array: ";
+    for (int i = 0; i < n; i++) {
+        cin >> arr[i];
+    }
+
+    hMinMax = CreateThread(NULL, 0, MinMaxThread, NULL, 0, NULL);
+    hAverage = CreateThread(NULL, 0, AverageThread, NULL, 0, NULL);
+
+    WaitForSingleObject(hMinMax, INFINITE);
+    WaitForSingleObject(hAverage, INFINITE);
+
+    replaceMinMaxWithAverage();
 
     return 0;
 }
